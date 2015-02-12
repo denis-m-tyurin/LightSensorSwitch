@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <avr/sleep.h>
-#include "state_day.h"
+#include "state_night.h"
 #include "states.h"
 #include "light_sensor.h"
 #include "leds.h"
@@ -14,26 +14,25 @@
 typedef struct
 {
 	uint8_t light_history;	
-} day_state_data;
+} night_state_data;
 
-/* A number of night level light measurements that we get 
- * before switching to the night mode. This is to exclude 
+/* A number of day level light measurements that we get 
+ * before switching to the day mode. This is to exclude 
  * ADC errors or impulses like flashlights, blinks, etc */
-#define SWITCH_TO_NIGHT_MODE_CNT 8 
+#define SWITCH_TO_DAY_MODE_CNT 8 
 
-void state_day_enter(void **pStateBuf)
+void state_night_enter(void **pStateBuf)
 {
-	day_state_data *pData;
+	night_state_data *pData;
 		
-	*pStateBuf = malloc(sizeof(day_state_data));
-	pData = (day_state_data*) *pStateBuf;
+	*pStateBuf = malloc(sizeof(night_state_data));
+	pData = (night_state_data*) *pStateBuf;
 
 	pData->light_history = 0;
-	
-	PORTD &= ~(1<<PD5);
+	PORTD |= (1<<PD5);
 }
 
-void state_day_exit(void **pStateBuf)
+void state_night_exit(void **pStateBuf)
 {
 		if (NULL != *pStateBuf)
 		{
@@ -41,10 +40,9 @@ void state_day_exit(void **pStateBuf)
 		}
 }
 
-
-void state_day_event_handler(uint8_t event, void **pStateBuf, void *data)
+void state_night_event_handler(uint8_t event, void **pStateBuf, void *data)
 {
-	day_state_data *pData = (day_state_data*) *pStateBuf;
+	night_state_data *pData = (night_state_data*) *pStateBuf;
 		
 	switch (event)
 	{
@@ -53,17 +51,17 @@ void state_day_event_handler(uint8_t event, void **pStateBuf, void *data)
 			if (light_sensor_get_data() < get_light_treshold())
 			{
 				leds_blue_blink(LEDS_SHORT_BLINK);
-				pData->light_history++;
-				
-				if (pData->light_history > SWITCH_TO_NIGHT_MODE_CNT)
-				{
-					states_schedule_state(STATE_NIGHT_MODE);
-				}
+				pData->light_history = 0;
 			}
 			else
 			{
 				leds_red_blink(LEDS_SHORT_BLINK);
-				pData->light_history = 0;
+				pData->light_history++;
+				
+				if (pData->light_history > SWITCH_TO_DAY_MODE_CNT)
+				{
+					states_schedule_state(STATE_DAY_MODE);
+				}
 			}
 					
 			/* Turn ON watchdog and sleep */

@@ -5,6 +5,8 @@
 #include <avr/io.h>
 #include "light_sensor.h"
 
+#define LIGHT_TRESHOLD_DEFAULT_VALUE 800
+
 void light_sensor_init()
 {
 	/* Setup ADC 
@@ -34,4 +36,9 @@ uint16_t light_sensor_get_data()
 	result |= (ADCH<<8);
 	return result;
 	
+}
+
+uint16_t get_light_treshold()
+{
+	return LIGHT_TRESHOLD_DEFAULT_VALUE;
 }

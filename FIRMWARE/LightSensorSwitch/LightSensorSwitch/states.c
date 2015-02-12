@@ -3,6 +3,7 @@
 
 /* include all the states */
 #include "state_day.h"
+#include "state_night.h"
 
 static void *pCurrentStateBuf = NULL;
 
@@ -18,7 +19,11 @@ STATE_T s_states[] = {
 		{STATE_DAY_MODE,
 		state_day_enter,
 		state_day_exit,
-		state_day_event_handler},		
+		state_day_event_handler},
+		{STATE_NIGHT_MODE,
+		state_night_enter,
+		state_night_exit,
+		state_night_event_handler},
 };
 
 void states_set_state(STATE_ID_T state_id)

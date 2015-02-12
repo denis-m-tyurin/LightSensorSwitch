@@ -122,6 +122,18 @@
     <Compile Include="state_day.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="state_night.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="state_night.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="watchdog.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="watchdog.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
