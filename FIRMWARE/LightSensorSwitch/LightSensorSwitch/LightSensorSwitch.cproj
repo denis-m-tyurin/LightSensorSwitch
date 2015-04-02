@@ -110,6 +110,12 @@
     <Compile Include="light_sensor.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="settings_manager.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="settings_manager.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="states.c">
       <SubType>compile</SubType>
     </Compile>
@@ -126,6 +132,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="state_night.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="state_settings.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="state_settings.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="watchdog.c">

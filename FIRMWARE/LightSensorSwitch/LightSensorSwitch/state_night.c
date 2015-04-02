@@ -10,6 +10,7 @@
 #include "light_sensor.h"
 #include "leds.h"
 #include "watchdog.h"
+#include "settings_manager.h"
 
 typedef struct
 {
@@ -38,6 +39,8 @@ void state_night_exit(void **pStateBuf)
 		{
 			free(*pStateBuf);
 		}
+		
+		PORTD &= ~(1<<PD5);
 }
 
 void state_night_event_handler(uint8_t event, void **pStateBuf, void *data)
@@ -48,7 +51,7 @@ void state_night_event_handler(uint8_t event, void **pStateBuf, void *data)
 	{
 		case EVENT_IDLE:
 			/* Run ADC and wait for completion */
-			if (light_sensor_get_data() < get_light_treshold())
+			if (light_sensor_get_data() < settings_manager_get_light_threshold())
 			{
 				leds_blue_blink(LEDS_SHORT_BLINK);
 				pData->light_history = 0;

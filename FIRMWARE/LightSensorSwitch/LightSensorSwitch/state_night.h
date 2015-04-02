@@ -1,5 +1,6 @@
 #ifndef STATE_NIGHT_H
 #define STATE_NIGHT_H
+#include <stdio.h>
 
 void state_night_enter(void **pStateBuf);
 void state_night_exit(void **pStateBuf);

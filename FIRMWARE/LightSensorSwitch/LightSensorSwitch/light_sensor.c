@@ -5,8 +5,6 @@
 #include <avr/io.h>
 #include "light_sensor.h"
 
-#define LIGHT_TRESHOLD_DEFAULT_VALUE 800
-
 void light_sensor_init()
 {
 	/* Setup ADC 
@@ -15,15 +13,14 @@ void light_sensor_init()
 	/* Voltage reference - AVcc
 	 * Channel - ADC3  */
 	ADMUX = (1 << REFS0) | (1<<MUX1) | (1<<MUX0);
-	
-	/* Enable ADC */
-	ADCSRA |= (1<<ADEN);
-	
 }
 
 uint16_t light_sensor_get_data()
 {
 	uint16_t result;
+	
+	/* Enable ADC */
+	ADCSRA |= (1<<ADEN);
 	
 	/* Start conversion */
 	ADCSRA |= (1<<ADSC);
@@ -34,11 +31,9 @@ uint16_t light_sensor_get_data()
 	/* Read ADC value (ADCL MUST BE READ FIRST) */
 	result = ADCL;
 	result |= (ADCH<<8);
+	
+	ADCSRA &= ~(1<<ADEN);
+	
 	return result;
 	
-}
-
-uint16_t get_light_treshold()
-{
-	return LIGHT_TRESHOLD_DEFAULT_VALUE;
 }
