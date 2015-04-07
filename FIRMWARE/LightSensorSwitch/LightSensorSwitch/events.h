@@ -1,0 +1,23 @@
+#ifndef EVENTS_H
+#define EVENTS_H
+
+typedef enum 
+{
+	EVENT_NONE = 0,
+	EVENT_IDLE,
+	EVENT_LOW_POWER,
+	EVENT_RESTORED_FROM_LOW_POWER,
+	EVENT_RESTORED_FROM_OVERVOLTAGE,
+	EVENT_OVERVOLTAGE,
+	EVENT_LIGHT_SENSOR_OK_TO_OFF,
+	EVENT_LIGHT_SENSOR_OK_TO_ON,
+	EVENT_LIGHT_SENSOR_BLINK_RED,
+	EVENT_LIGHT_SENSOR_BLINK_BLUE,
+
+	EVENT_MAX
+} event_t;
+
+void post_event(event_t event);
+event_t get_event_from_queue();
+
+#endif

@@ -3,6 +3,7 @@
 
 #include <avr/io.h>
 #include <stddef.h>
+#include "events.h"
 
 /*	States description
  *
@@ -19,18 +20,9 @@ typedef enum
 	STATE_NO_STATE = 0,
 	STATE_DAY_MODE,
 	STATE_NIGHT_MODE,
-	STATE_SETTINGS_MODE,
 		
 	STATE_STATE_MAX
 } STATE_ID_T;
-
-typedef enum 
-{
-	EVENT_NONE = 0,
-	EVENT_IDLE,
-		
-	EVENT_MAX
-} event_list;
 
 typedef struct  
 {
@@ -48,5 +40,5 @@ STATE_ID_T states_get_prev_state();
 STATE_ID_T states_get_scheduled_state();
 STATE_ID_T states_get_past_state();
 
-void states_dispatch_event(uint8_t event, void *data);
+void states_dispatch_event(event_t event, void *data);
 #endif

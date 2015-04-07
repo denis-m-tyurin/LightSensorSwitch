@@ -13,21 +13,26 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include "states.h"
+#include "events.h"
 #include "leds.h"
 #include "light_sensor.h"
 #include "watchdog.h"
-#include "settings_manager.h"
+#include "voltage_sensor.h"
+#include "light_sensor.h"
+#include "ext_load.h"
 
 static void indicateThreshold();
 
 int main(void)
 {
-	settings_manager_init();
 	leds_init();
-	light_sensor_init();
+
+	/* Initialize ADC, which is used by light and voltage sensors
+	 * Light sensor is connected to ADC3, voltage sensor to ADC2
+	 * Voltage reference - AVcc */
+	ADMUX = (1 << REFS0);
 		
-	DDRD |= (1<<PD5);
-	PORTD &= ~(1<<PD5);
+	ext_load_init();
 
 	/* Set DAY mode on startup */
 	states_set_state(STATE_DAY_MODE);
@@ -36,15 +41,18 @@ int main(void)
 	leds_red_blink(LEDS_LONG_BLINK);
 	leds_blue_blink(LEDS_LONG_BLINK);
 	
-	/* Indicate current threshold setting */
-	indicateThreshold();
-	
 	sei();
 
     while(1)
     {
-		states_dispatch_event(EVENT_IDLE, NULL);
-		
+    	voltage_sensor_check_voltage();
+    	light_sensor_check();
+
+    	for(event_t event = get_event_from_queue(); EVENT_NONE != event; event = get_event_from_queue())
+    	{
+    		states_dispatch_event(event, NULL);
+    	}
+
 		states_set_state(states_get_scheduled_state());
 
     }
